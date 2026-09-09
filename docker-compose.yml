@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: erp-postgres
+    environment:
+      POSTGRES_DB: erp
+      POSTGRES_USER: erp_owner
+      POSTGRES_PASSWORD: erp_owner_pw
+    ports:
+      - '5433:5432'
+    volumes:
+      - erp_pgdata:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U erp_owner -d erp']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  erp_pgdata:
